@@ -3,9 +3,10 @@ package com.unittest.unittesting.Repository;
 import com.unittest.unittesting.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface UsersRepository   extends JpaRepository<Long, Users> {
+public interface UserRepository  extends JpaRepository<Users,Integer> {
 
-    Optional<Users> findUserByEmail(String email);
+List<Users> findByEmail(String email);
 }

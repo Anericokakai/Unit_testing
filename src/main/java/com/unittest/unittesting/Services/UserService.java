@@ -4,6 +4,7 @@ import com.unittest.unittesting.Exceptions.UserExistException;
 import com.unittest.unittesting.Exceptions.UserNotFoundException;
 import com.unittest.unittesting.Repository.UserRepository;
 import com.unittest.unittesting.model.Users;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,8 @@ var responseUser= Users.builder()
 
 
     public  List<?> findUserByEmail(String email) {
-
+if(userRepository.findByEmail(email).isEmpty())
+    throw  new UserNotFoundException("user not found !!");
 
             return userRepository.findByEmail(email);
 

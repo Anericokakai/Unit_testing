@@ -10,7 +10,8 @@ import org.hibernate.validator.constraints.Length;
 
 @Data
 @Builder
-
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 

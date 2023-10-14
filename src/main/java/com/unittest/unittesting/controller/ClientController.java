@@ -3,6 +3,7 @@ package com.unittest.unittesting.controller;
 import com.unittest.unittesting.Service.ClientService;
 import com.unittest.unittesting.models.Client;
 import com.unittest.unittesting.tdo.ClientRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class ClientController {
     @Autowired
     private  ClientService clientService;
     @PostMapping("/signUp")
-    public ResponseEntity<?> saveNewClient (@RequestBody ClientRequest clientRequest){
+    public ResponseEntity<?> saveNewClient (@RequestBody @Valid ClientRequest clientRequest){
 
         Client savedClient= clientService.saveNewClient(clientRequest);
         return ResponseEntity.status(200).body(savedClient);

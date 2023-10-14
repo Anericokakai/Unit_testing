@@ -62,6 +62,7 @@ public class UserControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", is("/users/"+newUser.getId())))
                 .andExpect(jsonPath("$.email",is(newUser.getEmail())))
+                .andExpect(jsonPath("$.password").doesNotExist())
                 .andDo(print());
     }
 
@@ -69,4 +70,4 @@ public class UserControllerTest {
 
 }
 
-//                .andExpect(jsonPath("$.password").doesNotExist())
+//

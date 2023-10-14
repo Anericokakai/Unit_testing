@@ -3,6 +3,7 @@ package com.unittest.unittesting.controller;
 import com.unittest.unittesting.Exceptions.UserNotFoundException;
 import com.unittest.unittesting.Services.UserService;
 import com.unittest.unittesting.model.Users;
+import com.unittest.unittesting.tdo.UserResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,9 +30,10 @@ public class UserController {
 
 
    Users userData= userService.saveUser(requst);
+   UserResponse userResponse= modelMapper.map(userData,UserResponse.class);
 
     URI uri= URI.create("/users/"+userData.getId());
-   return ResponseEntity.created(uri).body(userData);
+   return ResponseEntity.created(uri).body(userResponse);
 
 
 
@@ -44,7 +46,9 @@ public class UserController {
     public ResponseEntity<?> findUserByEmail(@RequestParam  String email){
 
         var foundUser=userService.findUserByEmail(email);
-        return  ResponseEntity.status(200).body(foundUser);
+
+     UserResponse response=modelMapper.map(foundUser,UserResponse.class);
+        return  ResponseEntity.status(200).body(response);
 
 
 

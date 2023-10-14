@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 @Builder
 @NoArgsConstructor
@@ -19,7 +20,7 @@ public class ClientRequest {
     private String name;
 @Email(message = "invalid email address")
     private String email;
-@NotNull()
+@Length(min = 6,max = 16, message = "Password should have a minimum of 6 characters and a maximum of 16")
     private String password;
 
     private Role role;

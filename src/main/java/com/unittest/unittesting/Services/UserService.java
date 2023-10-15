@@ -22,10 +22,9 @@ public class UserService {
 
 
 
+    public Users saveUser(Users users ) throws UserExistException {
 
-    public Users saveUser(Users users ){
-      List<Users> userExist=userRepository.findByEmail(users.getEmail());
-        if(!userExist.isEmpty()){
+        if(userRepository.findByEmail(users.getEmail())!=null){
            throw new  UserExistException("user already exist");
         }
 
@@ -42,11 +41,9 @@ var responseUser= Users.builder()
     }
 
 
-    public  List<?> findUserByEmail(String email) {
-
+    public  Users findUserByEmail(String email) {
 
             return userRepository.findByEmail(email);
-
 
 
     }
@@ -55,14 +52,19 @@ var responseUser= Users.builder()
         return userRepository.findAll();
     }
 
-    public Users findUserById(int userId) {
-        return userRepository.findById(userId).orElseThrow();
+    public Users findUserById(int userId) throws UserNotFoundException {
+        if(userRepository.findByid(userId)==null){
+            throw  new UserNotFoundException("user not found with the given id:"+userId);
+        }
+
+        return userRepository.findByid(userId);
+
 
 
     }
 
 
-    public Users updateUser(Users user) {
+    public Users updateUser(Users user) throws UserNotFoundException {
 
         Optional<Users>  userExist=userRepository.findById(user.getId());
         if(userExist.isEmpty()){
@@ -77,4 +79,7 @@ var responseUser= Users.builder()
 
         return  ExistingUserRecord;
     }
+
+
+
 }

@@ -1,11 +1,13 @@
 package com.unittest.unittesting.controller;
 
+import com.unittest.unittesting.Exceptions.UserExistException;
 import com.unittest.unittesting.Exceptions.UserNotFoundException;
 import com.unittest.unittesting.Services.UserService;
 import com.unittest.unittesting.model.Users;
 import com.unittest.unittesting.tdo.UserResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +28,7 @@ public class UserController {
 
 //    ! CREATE A NEW USER API END POINT
 @PostMapping("/new")
-    public ResponseEntity<?> saveNewUser(@RequestBody @Valid Users requst){
+    public ResponseEntity<?> saveNewUser(@RequestBody @Valid Users requst) throws UserExistException {
 
 
    Users userData= userService.saveUser(requst);
@@ -35,9 +37,17 @@ public class UserController {
     URI uri= URI.create("/users/"+userData.getId());
    return ResponseEntity.created(uri).body(userResponse);
 
-
-
  }
+
+// ! find user by id
+
+    @GetMapping("/{userId}")
+
+    public ResponseEntity<?> findUserById(@PathVariable("userId") int id) throws UserNotFoundException {
+
+    return ResponseEntity.ok().body(modelMapper.map(userService.findUserById(id),UserResponse.class));
+
+    }
 
 
 
@@ -49,8 +59,6 @@ public class UserController {
 
      UserResponse response=modelMapper.map(foundUser,UserResponse.class);
         return  ResponseEntity.status(200).body(response);
-
-
 
  }
 
@@ -75,12 +83,7 @@ return ResponseEntity.status(HttpStatus.CREATED.value()).body(updatedUser);
 
     }catch (UserNotFoundException ex){
     return ResponseEntity.status(401).body(ex.getMessage());
-
-
-
-    }
-
-    }
+}}
 
 
 }

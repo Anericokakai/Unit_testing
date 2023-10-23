@@ -2,12 +2,11 @@ package com.unittest.unittesting.controller;
 
 import com.unittest.unittesting.Exceptions.UserExistException;
 import com.unittest.unittesting.Exceptions.UserNotFoundException;
-import com.unittest.unittesting.Services.UserService;
+import com.unittest.unittesting.Services.UserServiceImpl;
 import com.unittest.unittesting.model.Users;
 import com.unittest.unittesting.tdo.UserResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     @Autowired
-   private final UserService userService;
+   private final UserServiceImpl userServiceImpl;
     @Autowired
     private  final ModelMapper modelMapper;
 
@@ -31,7 +30,7 @@ public class UserController {
     public ResponseEntity<?> saveNewUser(@RequestBody @Valid Users requst) throws UserExistException {
 
 
-   Users userData= userService.saveUser(requst);
+   Users userData= userServiceImpl.saveUser(requst);
    UserResponse userResponse= modelMapper.map(userData,UserResponse.class);
 
     URI uri= URI.create("/users/"+userData.getId());
@@ -43,9 +42,10 @@ public class UserController {
 
     @GetMapping("/{userId}")
 
-    public ResponseEntity<?> findUserById(@PathVariable("userId") int id) throws UserNotFoundException {
+    public ResponseEntity<?> findUserById(@PathVariable("userId") int id) throws Exception{
+    Users user= userServiceImpl.findUserById(id);
 
-    return ResponseEntity.ok().body(modelMapper.map(userService.findUserById(id),UserResponse.class));
+    return ResponseEntity.status(200).body(user);
 
     }
 
@@ -55,7 +55,7 @@ public class UserController {
  @GetMapping("/user")
     public ResponseEntity<?> findUserByEmail(@RequestParam  String email){
 
-        var foundUser=userService.findUserByEmail(email);
+        var foundUser= userServiceImpl.findUserByEmail(email);
 
      UserResponse response=modelMapper.map(foundUser,UserResponse.class);
         return  ResponseEntity.status(200).body(response);
@@ -67,7 +67,7 @@ public class UserController {
  @GetMapping("/all")
     public List<Users >findAllUsers(){
 
-    return  userService.findAllUsers();
+    return  userServiceImpl.findAllUsers();
  }
 
 // !UPDATE USER RECORD
@@ -77,7 +77,7 @@ public class UserController {
     public  ResponseEntity<?> updateUserDetails(@RequestBody Users updateUser){
 try
 {
-Users updatedUser =userService.updateUser(updateUser);
+Users updatedUser = userServiceImpl.updateUser(updateUser);
 return ResponseEntity.status(HttpStatus.CREATED.value()).body(updatedUser);
 
 

@@ -1,22 +1,19 @@
 package com.unittest.unittesting.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unittest.unittesting.Exceptions.UserNotFoundException;
-import com.unittest.unittesting.Services.UserService;
+import com.unittest.unittesting.Services.UserServiceImpl;
 import com.unittest.unittesting.model.Role;
 import com.unittest.unittesting.model.Users;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import static org.hamcrest.Matchers.is;
 
@@ -37,7 +34,7 @@ public class UserControllerTest {
 
 
     @MockBean
-    UserService userService;
+    UserServiceImpl userServiceImpl;
     Users users;
     Users validUser;
 
@@ -71,7 +68,7 @@ public class UserControllerTest {
     public  void shouldReturn201Status() throws Exception{
 
 
-        Mockito.when(userService.saveUser(validUser)).thenReturn(validUser);
+        Mockito.when(userServiceImpl.saveUser(validUser)).thenReturn(validUser);
         String requestBody= objectMapper.writeValueAsString(validUser);
 
 
@@ -90,13 +87,14 @@ public class UserControllerTest {
 
     @Test
     public  void TestShouldFailWithRequest404() throws Exception {
- Mockito.when(userService.findUserById(validUser.getId())).thenReturn(validUser);
 
 
-String userId="1234";
+      Mockito.when(userServiceImpl.findUserById(validUser.getId())).thenThrow(Exception.class);
+
+       String userId="120";
 
 mockMvc.perform(
-        get("/users/1")
+        get("/users/{userId}",userId)
         .contentType("application/json")
         ).andExpect(status().isBadRequest())
         .andDo(print());

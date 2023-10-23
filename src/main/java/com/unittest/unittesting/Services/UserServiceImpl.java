@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 
-public class UserService {
+public class UserServiceImpl {
 
 
 @Autowired
@@ -52,9 +52,10 @@ var responseUser= Users.builder()
         return userRepository.findAll();
     }
 
-    public Users findUserById(int userId) throws UserNotFoundException {
+    public Users findUserById(int userId)  throws Exception{
         if(userRepository.findByid(userId)==null){
             throw  new UserNotFoundException("user not found with the given id:"+userId);
+
         }
 
         return userRepository.findByid(userId);

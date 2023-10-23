@@ -1,7 +1,11 @@
 package com.unittest.unittesting.Exceptions;
 
-public class UserNotFoundException extends  Exception{
-    public UserNotFoundException(String message){
+
+
+
+public class UserNotFoundException extends Exception {
+    public UserNotFoundException(String message) {
+
         super(message);
     }
 }
